@@ -662,7 +662,7 @@ class _ProfileSetupPageState extends State<ProfileSetupPage> {
             elevation: 4,
             child: Padding(
               padding: const EdgeInsets.all(24.0),
-              child: Column(
+        child: Column(
                 mainAxisSize: MainAxisSize.min,
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
@@ -1347,7 +1347,7 @@ class _GlobalChatScreenState extends State<GlobalChatScreen> {
               if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
                 return Center(
                   child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Icon(
                         Icons.chat_bubble_outline,
@@ -1358,7 +1358,7 @@ class _GlobalChatScreenState extends State<GlobalChatScreen> {
                             .withOpacity(0.5),
                       ),
                       const SizedBox(height: 16),
-                      Text(
+            Text(
                         'No messages yet',
                         style: Theme.of(context).textTheme.titleMedium,
                       ),
@@ -1366,9 +1366,9 @@ class _GlobalChatScreenState extends State<GlobalChatScreen> {
                       Text(
                         'Be the first to start the conversation!',
                         style: Theme.of(context).textTheme.bodyMedium,
-                      ),
-                    ],
-                  ),
+            ),
+          ],
+        ),
                 );
               }
 
