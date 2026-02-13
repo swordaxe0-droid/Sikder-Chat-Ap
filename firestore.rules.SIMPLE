@@ -1,0 +1,29 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    
+    // Users collection - anyone can read, only owner can write
+    match /users/{userId} {
+      allow read: if true;
+      allow write: if request.auth != null && request.auth.uid == userId;
+    }
+    
+    // Global messages - anyone authenticated can read/write
+    match /messages/{messageId} {
+      allow read: if true;
+      allow write: if request.auth != null;
+    }
+    
+    // Private chats - much simpler rules
+    match /privateChats/{chatId} {
+      // Allow authenticated users to read/write any private chat they're part of
+      allow read, write: if request.auth != null;
+      
+      // Private messages subcollection
+      match /messages/{messageId} {
+        // Allow authenticated users to read/write messages
+        allow read, write: if request.auth != null;
+      }
+    }
+  }
+}

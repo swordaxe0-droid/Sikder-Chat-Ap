@@ -1,0 +1,73 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    
+    // Users collection
+    // - Anyone can read user profiles (for displaying names, avatars)
+    // - Only the user themselves can create/update their own profile
+    // - Prevents profile deletion
+    match /users/{userId} {
+      allow read: if true;
+      allow create: if request.auth != null && 
+                       request.auth.uid == userId;
+      allow update: if request.auth != null && 
+                       request.auth.uid == userId;
+      allow delete: if false;
+    }
+    
+    // Global messages collection (public chat)
+    // - Anyone can read all messages
+    // - Authenticated users can create messages
+    // - Only message author can update/delete their own messages
+    // - Validates that UID matches the authenticated user
+    match /messages/{messageId} {
+      allow read: if true;
+      allow create: if request.auth != null && 
+                       request.resource.data.uid == request.auth.uid;
+      allow update, delete: if request.auth != null && 
+                               resource.data.uid == request.auth.uid;
+    }
+    
+    // Private chats collection (chat metadata)
+    // - Only participants can read chat information
+    // - Only participants can create/update chat
+    // - Validates that the user is in the participants array
+    match /privateChats/{chatId} {
+      // Allow read if user is a participant (for existing chats)
+      allow read: if request.auth != null && 
+                     (resource == null || request.auth.uid in resource.data.participants);
+      
+      // Allow create/update if user is in the NEW participants array
+      // This allows creating new chats and updating existing ones
+      allow create, update: if request.auth != null && 
+                               request.auth.uid in request.resource.data.participants;
+      
+      // Private chat messages subcollection
+      // - Only participants of the chat can read messages
+      // - Only authenticated users who are participants can create messages
+      // - Only the sender can update/delete their own messages
+      match /messages/{messageId} {
+        // Helper function to check if user is a participant
+        function isParticipant() {
+          return request.auth != null && 
+                 exists(/databases/$(database)/documents/privateChats/$(chatId)) &&
+                 request.auth.uid in get(/databases/$(database)/documents/privateChats/$(chatId)).data.participants;
+        }
+        
+        // Allow read if user is a participant
+        allow read: if isParticipant();
+        
+        // Allow create if user is authenticated and the senderId matches their UID
+        // The parent chat document MUST exist (created first in the code)
+        allow create: if request.auth != null && 
+                         request.resource.data.senderId == request.auth.uid &&
+                         isParticipant();
+        
+        // Allow update/delete only if user is the sender
+        allow update, delete: if request.auth != null && 
+                                 resource.data.senderId == request.auth.uid &&
+                                 isParticipant();
+      }
+    }
+  }
+}

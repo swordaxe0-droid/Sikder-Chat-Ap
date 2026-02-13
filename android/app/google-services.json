@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "669815769810",
+    "project_id": "sikder-chat-app",
+    "storage_bucket": "sikder-chat-app.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:669815769810:android:41ff75b0e509bc9433fb0b",
+        "android_client_info": {
+          "package_name": "com.example.thechat_app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "669815769810-onf5o7g9siis778bla05viuet7lqua8a.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCUGTz-Xub_vDfr-ux5J_W-Iv-zD4tTaHs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "669815769810-onf5o7g9siis778bla05viuet7lqua8a.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
